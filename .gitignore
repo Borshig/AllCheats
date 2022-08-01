@@ -1,0 +1,21 @@
+*.db
+*.suo
+
+*.pdb
+
+
+// temp files
+*.ipdb
+*.tlog
+*.obj
+*.iobj
+*.lnk
+*.log
+
+
+// ?
+*.db-shm
+*.db-wal
+*.idb
+*.ilk
+*.ipch

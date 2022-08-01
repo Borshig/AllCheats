@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable MugenJinFuuTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>14580346228</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Ammo in Scnd gun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>1458034BDE8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Health RDI+4C"</Description>
+      <VariableType>Float</VariableType>
+      <Address>14047ADDC04</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>64</ID>
+      <Description>"No description"</Description>
+      <VariableType>Float</VariableType>
+      <Address>23BBB4ED4CC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>65</ID>
+      <Description>"RDI=0000023BBB4C9B40 +24"</Description>
+      <VariableType>Float</VariableType>
+      <Address>23BBB4C9B64</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>C0</Offset>
+        <Offset>10</Offset>
+        <Offset>A8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>C0</Offset>
+        <Offset>50</Offset>
+        <Offset>B0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>58</Offset>
+        <Offset>10</Offset>
+        <Offset>B8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>58</Offset>
+        <Offset>50</Offset>
+        <Offset>C0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>58</Offset>
+        <Offset>90</Offset>
+        <Offset>C8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>58</Offset>
+        <Offset>D0</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>10</Offset>
+        <Offset>A8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>50</Offset>
+        <Offset>B0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>14</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>10</Offset>
+        <Offset>C8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>16</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>50</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>17</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>10</Offset>
+        <Offset>C0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>18</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>50</Offset>
+        <Offset>C8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>19</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>198</Offset>
+        <Offset>10</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>20</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>90</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>50</Offset>
+        <Offset>10</Offset>
+        <Offset>B0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"psr Ammo in MainGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>48</Offset>
+        <Offset>10</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>57</ID>
+      <Description>"PSR ammo in main mag"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>128</Offset>
+        <Offset>10</Offset>
+        <Offset>C8</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>58</ID>
+      <Description>"PSR ammo in main mag"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"GameAssembly.dll"+03DF2308</Address>
+      <Offsets>
+        <Offset>28</Offset>
+        <Offset>128</Offset>
+        <Offset>50</Offset>
+        <Offset>D0</Offset>
+        <Offset>8</Offset>
+        <Offset>B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>60</ID>
+      <Description>"Ammo in SecondGun (MainGun+0x440)"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>240E5D1EB68</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>63</ID>
+      <Description>"Health RBX+C4 (2)"</Description>
+      <VariableType>Float</VariableType>
+      <Address>23BBB4C9C04</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>68</ID>
+      <Description>"Ammo in SecondGun"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>27D05FEDD28</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>69</ID>
+      <Description>"RDI= +24"</Description>
+      <VariableType>Float</VariableType>
+      <Address>277DEBF1984</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>70</ID>
+      <Description>"No description"</Description>
+      <VariableType>Float</VariableType>
+      <Address>277DEBF1A24</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>71</ID>
+      <Description>"No description"</Description>
+      <VariableType>Float</VariableType>
+      <Address>277DECBD33C</Address>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

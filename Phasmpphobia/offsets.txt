@@ -1,0 +1,13 @@
+Phasmophobia offsets
+
+//LocalPlayer Enitity
+UnityPlayer.dll+846CBD
+
+
+UnityPlayer.dll+846CC1: F2 0F 10 78 08     - movsd xmm7,[rax+08]  // POS?
+UnityPlayer.dll+846CC6: F2 44 0F 10 40 10  - movsd xmm8,[rax+10]  //
+
+
+UnityPlayer.dll+846CCF: 66 0F 5A F6        - cvtpd2ps xmm6,xmm6  // posX
+UnityPlayer.dll+846CD3: 66 0F 5A FF        - cvtpd2ps xmm7,xmm7  // posY
+UnityPlayer.dll+846CD7: 66 45 0F 5A C0     - cvtpd2ps xmm8,xmm8  // posZ

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable MugenJinFuuTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>29</ID>
+      <Description>"1ST scandata (Health pointers)"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>13</ID>
+          <Description>"pointerscan result"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"ac_client.exe"+00042958</Address>
+          <Offsets>
+            <Offset>0</Offset>
+            <Offset>4</Offset>
+            <Offset>20</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14</ID>
+          <Description>"pointerscan result"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"ac_client.exe"+00042958</Address>
+          <Offsets>
+            <Offset>0</Offset>
+            <Offset>4</Offset>
+            <Offset>30</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>15</ID>
+          <Description>"pointerscan result"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"ac_client.exe"+00042958</Address>
+          <Offsets>
+            <Offset>0</Offset>
+            <Offset>8</Offset>
+            <Offset>38</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>16</ID>
+          <Description>"pointerscan result"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"ac_client.exe"+00062668</Address>
+          <Offsets>
+            <Offset>0</Offset>
+            <Offset>8</Offset>
+            <Offset>50</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>2</ID>
+          <Description>"No description"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>0C64F62C</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>3</ID>
+          <Description>"No description"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>0C64F628+4</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>5</ID>
+          <Description>"No description"</Description>
+          <LastState Value="7825" RealAddress="0C64F62C"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>0C64F628+4</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"Health"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>24</ID>
+      <Description>"Armor"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>4</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>28</ID>
+      <Description>"MG: Ammo"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>44</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>26</ID>
+      <Description>"MG: Ammo Reserved"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>20</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>27</ID>
+      <Description>"SG: Ammo"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>48</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>25</ID>
+      <Description>"SG: Ammo Reserved"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"ac_client.exe"+0001A854</Address>
+      <Offsets>
+        <Offset>1C</Offset>
+        <Offset>40</Offset>
+      </Offsets>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="80000008">
+      <Description>Health  :sub [ebx+04],edi</Description>
+      <AddressString>ac_client.exe+29D1F</AddressString>
+      <Before>
+        <Byte>05</Byte>
+        <Byte>09</Byte>
+        <Byte>00</Byte>
+        <Byte>2B</Byte>
+        <Byte>F8</Byte>
+      </Before>
+      <Actual>
+        <Byte>29</Byte>
+        <Byte>7B</Byte>
+        <Byte>04</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>C7</Byte>
+        <Byte>5F</Byte>
+        <Byte>5E</Byte>
+        <Byte>8B</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="Health" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="4 Bytes" Bytesize="4" RLECount="56" OffsetHex="00000000" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="224" Vartype="Float" Bytesize="4" OffsetHex="000000E0" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="228" Vartype="Byte" Bytesize="1" RLECount="4" OffsetHex="000000E4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="232" Vartype="Float" Bytesize="4" OffsetHex="000000E8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="236" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000000EC" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="248" Vartype="4 Bytes" Bytesize="4" OffsetHex="000000F8" DisplayMethod="Hexadecimal"/>
+        <Element Offset="252" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000000FC" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="264" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000108" DisplayMethod="Hexadecimal"/>
+        <Element Offset="268" Vartype="4 Bytes" Bytesize="4" RLECount="20" OffsetHex="0000010C" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="348" Vartype="Pointer" Bytesize="4" OffsetHex="0000015C" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="352" Vartype="4 Bytes" Bytesize="4" RLECount="86" OffsetHex="00000160" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="696" Vartype="String" Bytesize="51" OffsetHex="000002B8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="747" Vartype="Byte" Bytesize="1" OffsetHex="000002EB" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="748" Vartype="4 Bytes" Bytesize="4" RLECount="69" OffsetHex="000002EC" DisplayMethod="Unsigned Integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
+</CheatTable>
