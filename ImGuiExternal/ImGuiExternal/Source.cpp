@@ -146,7 +146,6 @@ void MainLoop() {
 			pParams.BackBufferWidth = Process::WindowWidth;
 			pParams.BackBufferHeight = Process::WindowHeight;
 			SetWindowPos(OverlayWindow::Hwnd, (HWND)0, TempPoint.x, TempPoint.y, Process::WindowWidth, Process::WindowHeight, SWP_NOREDRAW);
-			DirectD3D->Reset(&pParams);
 		}
 		Render();
 	}
@@ -154,7 +153,6 @@ void MainLoop() {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 	if (DirectD3D != NULL) {
-		DirectD3D->EndScene();
 		DirectD3D->Release();
 	}
 	if (DirectD3D != NULL) {
@@ -183,8 +181,8 @@ bool DirectXInit() {
 	Params.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	Params.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
-	if (FAILED(DirectD3D->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, OverlayWindow::Hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &Params, 0, &DirectD3D))) {
-		Direct3D3->Release();
+	if (FAILED(DirectD3D->Create(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, OverlayWindow::Hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &Params, 0, &DirectD3D))) {
+		DirectD3D->Release();
 		return false;
 	}
 
@@ -194,7 +192,7 @@ bool DirectXInit() {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	ImGui_ImplWin32_Init(OverlayWindow::Hwnd);
-	ImGui_ImplDX11_Init(DirectD3D, DirectD3D);
+	ImGui_ImplDX11_Init(DirectD3D, DirectD3DContext);
 	DirectD3D->Release();
 	return true;
 }
@@ -207,12 +205,8 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 	switch (Message) {
 	case WM_DESTROY:
 		if (DirectD3D != NULL) {
-			DirectD3D->EndScene();
 			DirectD3D->Release();
-		}
-		if (DirectD3D != NULL) {
-			DirectD3D->Release();
-		}
+		}		
 		PostQuitMessage(0);
 		exit(4);
 		break;
@@ -221,7 +215,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 			ImGui_ImplDX11_InvalidateDeviceObjects();
 			pParams.BackBufferWidth = LOWORD(lParam);
 			pParams.BackBufferHeight = HIWORD(lParam);
-			HRESULT hr = DirectD3D->Reset(&pParams);
+			//HRESULT hr = DirectD3D->Reset(&pParams);
 			if (hr == D3DERR_INVALIDCALL)
 				IM_ASSERT(0);
 			ImGui_ImplDX11_CreateDeviceObjects();
