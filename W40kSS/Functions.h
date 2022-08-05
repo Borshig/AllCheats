@@ -14,7 +14,7 @@ DWORD GetProcessId(LPCSTR ProcessName) {
 	pt.dwSize = sizeof(PROCESSENTRY32);
 	if (Process32First(hsnap, &pt)) {
 		do {
-			if (!lstrcmpi(pt.szExeFile, ProcessName)) {
+			if (!lstrcmpiA(pt.szExeFile, ProcessName)) {
 				CloseHandle(hsnap);
 				return pt.th32ProcessID;
 			}

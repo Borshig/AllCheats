@@ -1,10 +1,7 @@
-#include <dxgi.h>
-#include <d3d11.h>
 #include "Functions.h"
 #include "Overlay.h"
 
-
-LPCSTR TargetProcess = "SOVIET64.exe"; //"D3D9Test.exe";
+LPCSTR TargetProcess = "D3D9Test.exe";
 bool ShowMenu = true;
 bool ImGui_Initialised = false;
 bool CreateConsole = true;
@@ -30,47 +27,14 @@ namespace OverlayWindow {
 	HWND Hwnd;
 	LPCSTR Name;
 }
-/*
+
 namespace DirectX9Interface {
-	IDirectD3DEx* DirectD3D = nullptr;
-	IDirect3DDevice9Ex* DirectD3D = nullptr;
+	IDirect3D9Ex* Direct3D9 = NULL;
+	IDirect3DDevice9Ex* pDevice = NULL;
 	D3DPRESENT_PARAMETERS pParams = { NULL };
 	MARGINS Margin = { -1 };
-	MSG Message = { nullptr };
+	MSG Message = { NULL };
 }
-*/
-
-static ID3D11Device* DirectD3D = nullptr;
-static ID3D11DeviceContext* DirectD3DContext = nullptr;
-static IDXGISwapChain* pSwapChain = NULL;
-static ID3D11RenderTargetView* mainRenderTargetView = NULL;
-D3DPRESENT_PARAMETERS pParams = { NULL };
-MARGINS Margin = { -1 };
-MSG Message = { nullptr };
-
-
-void CreateRenderTarget()
-{
-	ID3D11Texture2D* pBackBuffer;
-	pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-	DirectD3D->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
-	pBackBuffer->Release();
-}
-
-void CleanupRenderTarget()
-{
-	if (mainRenderTargetView) { mainRenderTargetView->Release(); mainRenderTargetView = NULL; }
-}
-
-void CleanuDirectD3DD3D()
-{
-	CleanupRenderTarget();
-	if (pSwapChain) { pSwapChain->Release(); pSwapChain = NULL; }
-	if (DirectD3DContext) { DirectD3DContext->Release(); DirectD3DContext = NULL; }
-	if (DirectD3D) { DirectD3D->Release(); DirectD3D = NULL; }
-}
-
-
 
 void Draw() {
 	char FpsInfo[64];
@@ -81,7 +45,7 @@ void Draw() {
 
 void Render() {
 	if (GetAsyncKeyState(VK_INSERT) & 1) ShowMenu = !ShowMenu;
-	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	Draw();
@@ -92,18 +56,33 @@ void Render() {
 	}
 	ImGui::EndFrame();
 
+	DirectX9Interface::pDevice->SetRenderState(D3DRS_ZENABLE, false);
+	DirectX9Interface::pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	DirectX9Interface::pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
 
+	DirectX9Interface::pDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+	if (DirectX9Interface::pDevice->BeginScene() >= 0) {
+		ImGui::Render();
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+		DirectX9Interface::pDevice->EndScene();
+	}
 
+	HRESULT result = DirectX9Interface::pDevice->Present(NULL, NULL, NULL, NULL);
+	if (result == D3DERR_DEVICELOST && DirectX9Interface::pDevice->TestCooperativeLevel() == D3DERR_DEVICENOTRESET) {
+		ImGui_ImplDX9_InvalidateDeviceObjects();
+		DirectX9Interface::pDevice->Reset(&DirectX9Interface::pParams);
+		ImGui_ImplDX9_CreateDeviceObjects();
+	}
 }
 
 void MainLoop() {
 	static RECT OldRect;
-	ZeroMemory(&Message, sizeof(MSG));
+	ZeroMemory(&DirectX9Interface::Message, sizeof(MSG));
 
-	while (Message.message != WM_QUIT) {
-		if (PeekMessage(&Message, OverlayWindow::Hwnd, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&Message);
-			DispatchMessage(&Message);
+	while (DirectX9Interface::Message.message != WM_QUIT) {
+		if (PeekMessage(&DirectX9Interface::Message, OverlayWindow::Hwnd, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&DirectX9Interface::Message);
+			DispatchMessage(&DirectX9Interface::Message);
 		}
 		HWND ForegroundWindow = GetForegroundWindow();
 		if (ForegroundWindow == Process::Hwnd) {
@@ -143,27 +122,29 @@ void MainLoop() {
 			OldRect = TempRect;
 			Process::WindowWidth = TempRect.right;
 			Process::WindowHeight = TempRect.bottom;
-			pParams.BackBufferWidth = Process::WindowWidth;
-			pParams.BackBufferHeight = Process::WindowHeight;
+			DirectX9Interface::pParams.BackBufferWidth = Process::WindowWidth;
+			DirectX9Interface::pParams.BackBufferHeight = Process::WindowHeight;
 			SetWindowPos(OverlayWindow::Hwnd, (HWND)0, TempPoint.x, TempPoint.y, Process::WindowWidth, Process::WindowHeight, SWP_NOREDRAW);
+			DirectX9Interface::pDevice->Reset(&DirectX9Interface::pParams);
 		}
 		Render();
 	}
-	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	if (DirectD3D != NULL) {
-		DirectD3D->Release();
+	if (DirectX9Interface::pDevice != NULL) {
+		DirectX9Interface::pDevice->EndScene();
+		DirectX9Interface::pDevice->Release();
 	}
-	if (DirectD3D != NULL) {
-		DirectD3D->Release();
+	if (DirectX9Interface::Direct3D9 != NULL) {
+		DirectX9Interface::Direct3D9->Release();
 	}
 	DestroyWindow(OverlayWindow::Hwnd);
 	UnregisterClass(OverlayWindow::WindowClass.lpszClassName, OverlayWindow::WindowClass.hInstance);
 }
 
 bool DirectXInit() {
-	if (FAILED(Direct3DCreate9Ex(D3D_SDK_VERSION, &DirectD3D))) {
+	if (FAILED(Direct3DCreate9Ex(D3D_SDK_VERSION, &DirectX9Interface::Direct3D9))) {
 		return false;
 	}
 
@@ -181,8 +162,8 @@ bool DirectXInit() {
 	Params.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	Params.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
-	if (FAILED(DirectD3D->Create(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, OverlayWindow::Hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &Params, 0, &DirectD3D))) {
-		DirectD3D->Release();
+	if (FAILED(DirectX9Interface::Direct3D9->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, OverlayWindow::Hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &Params, 0, &DirectX9Interface::pDevice))) {
+		DirectX9Interface::Direct3D9->Release();
 		return false;
 	}
 
@@ -192,8 +173,8 @@ bool DirectXInit() {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	ImGui_ImplWin32_Init(OverlayWindow::Hwnd);
-	ImGui_ImplDX11_Init(DirectD3D, DirectD3DContext);
-	DirectD3D->Release();
+	ImGui_ImplDX9_Init(DirectX9Interface::pDevice);
+	DirectX9Interface::Direct3D9->Release();
 	return true;
 }
 
@@ -204,21 +185,25 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 
 	switch (Message) {
 	case WM_DESTROY:
-		if (DirectD3D != NULL) {
-			DirectD3D->Release();
-		}		
+		if (DirectX9Interface::pDevice != NULL) {
+			DirectX9Interface::pDevice->EndScene();
+			DirectX9Interface::pDevice->Release();
+		}
+		if (DirectX9Interface::Direct3D9 != NULL) {
+			DirectX9Interface::Direct3D9->Release();
+		}
 		PostQuitMessage(0);
 		exit(4);
 		break;
 	case WM_SIZE:
-		if (DirectD3D != NULL && wParam != SIZE_MINIMIZED) {
-			ImGui_ImplDX11_InvalidateDeviceObjects();
-			pParams.BackBufferWidth = LOWORD(lParam);
-			pParams.BackBufferHeight = HIWORD(lParam);
-			//HRESULT hr = DirectD3D->Reset(&pParams);
+		if (DirectX9Interface::pDevice != NULL && wParam != SIZE_MINIMIZED) {
+			ImGui_ImplDX9_InvalidateDeviceObjects();
+			DirectX9Interface::pParams.BackBufferWidth = LOWORD(lParam);
+			DirectX9Interface::pParams.BackBufferHeight = HIWORD(lParam);
+			HRESULT hr = DirectX9Interface::pDevice->Reset(&DirectX9Interface::pParams);
 			if (hr == D3DERR_INVALIDCALL)
 				IM_ASSERT(0);
-			ImGui_ImplDX11_CreateDeviceObjects();
+			ImGui_ImplDX9_CreateDeviceObjects();
 		}
 		break;
 	default:
@@ -245,8 +230,8 @@ void SetupWindow() {
 		Process::WindowHeight = TempRect.bottom;
 	}
 
-	OverlayWindow::Hwnd = CreateWindowEx(NULL, OverlayWindow::Name, OverlayWindow::Name, WS_POPUP | WS_VISIBLE, Process::WindowLeft, Process::WindowTop, Process::WindowWidth, Process::WindowHeight, NULL, NULL, 0, NULL);
-	DwmExtendFrameIntoClientArea(OverlayWindow::Hwnd, &Margin);
+	OverlayWindow::Hwnd = CreateWindowEx(NULL, OverlayWindow::Name, OverlayWindow::Name, WS_POPUP | WS_VISIBLE, Process::WindowLeft, Process::WindowTop, Process::WindowWidth, Process::WindowHeight, nullptr, nullptr, 0, nullptr);
+	DwmExtendFrameIntoClientArea(OverlayWindow::Hwnd, &DirectX9Interface::Margin);
 	SetWindowLong(OverlayWindow::Hwnd, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW);
 	ShowWindow(OverlayWindow::Hwnd, SW_SHOW);
 	UpdateWindow(OverlayWindow::Hwnd);

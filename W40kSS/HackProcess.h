@@ -11,7 +11,7 @@ public:
 
 	PROCESSENTRY32 __gameProcess;
 	HANDLE __HandleProcess;
-	HWND __HWNDCss;
+	HWND __HWND;
 	DWORD __dwordEngine;
 	DWORD __dwordWXPModDLL;
 
@@ -147,14 +147,11 @@ public:
 		CloseHandle(__HandleProcess);
 	}
 
-	void RunProcess()
+	void RunProcess(const char* ProcessName)
 	{
-
-
-
 		//commented lines are for non steam versions of the game
 		runSetDebugPrivs();
-		while (!FindProcessName("Soulstorm.exe", &__gameProcess)) Sleep(12); //"hl2.exe"
+		while (!FindProcessName(ProcessName, &__gameProcess)) Sleep(12); //"hl2.exe"
 		while (!(getThreadByProcess(__gameProcess.th32ProcessID))) Sleep(12);
 		__HandleProcess = OpenProcess(PROCESS_ALL_ACCESS, false, __gameProcess.th32ProcessID);
 
@@ -173,9 +170,7 @@ public:
 		//while (__dwordVGui == 0x0) __dwordVGui = GetModuleNamePointer((LPSTR)"vguimatsurface.dll", __gameProcess.th32ProcessID);
 		//while(__dwordLibCef == 0x0) __dwordLibCef = GetModuleNamePointer("libcef.dll", __gameProcess.th32ProcessID);
 	    //while(__dwordSteam == 0x0) __dwordSteam = GetModuleNamePointer("steam.dll", __gameProcess.th32ProcessID);
-		__HWNDCss = FindWindowA(NULL, "Counter-Strike: Global Offensive");
-
-		return;
+		__HWND = FindWindowA(nullptr, "Dawn of War: Soulstorm");
 	}
 };
 

@@ -248,7 +248,7 @@ static void ImGui_ImplWin32_UpdateMouseData()
 {
     ImGui_ImplWin32_Data* bd = ImGui_ImplWin32_GetBackendData();
     ImGuiIO& io = ImGui::GetIO();
-    IM_ASSERT(bd->hWnd != 0);
+    //IM_ASSERT(bd->hWnd != 0);
 
     const bool is_app_focused = (::GetForegroundWindow() == bd->hWnd);
     if (is_app_focused)

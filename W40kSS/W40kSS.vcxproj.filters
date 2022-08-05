@@ -24,9 +24,6 @@
     <ClCompile Include="W40kSS.cpp">
       <Filter>Main\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hacks.cpp">
-      <Filter>Main\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\imgui.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -42,9 +39,6 @@
     <ClCompile Include="include\imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="include\backends\imgui_impl_dx12.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="include\backends\imgui_impl_win32.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -54,12 +48,12 @@
     <ClCompile Include="include\backends\imgui_impl_dx11.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="include\backends\imgui_impl_dx9.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HackProcess.h">
-      <Filter>Main\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hacks.h">
       <Filter>Main\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\imconfig.h">
@@ -77,9 +71,6 @@
     <ClInclude Include="include\imstb_textedit.h">
       <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="include\backends\imgui_impl_dx12.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="include\backends\imgui_impl_win32.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -91,6 +82,15 @@
     </ClInclude>
     <ClInclude Include="include\backends\imgui_impl_dx11.h">
       <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\backends\imgui_impl_dx9.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Main\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlay.h">
+      <Filter>Main\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

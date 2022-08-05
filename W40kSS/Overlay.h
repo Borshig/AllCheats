@@ -1,6 +1,6 @@
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_dx9.h"
-#include "Imgui/imgui_impl_win32.h"
+#include "include/imgui.h"
+#include "include/backends/imgui_impl_dx9.h"
+#include "include/backends/imgui_impl_win32.h"
 
 typedef struct
 {
