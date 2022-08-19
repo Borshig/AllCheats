@@ -89,7 +89,7 @@ namespace DirectX9Interface {
 	IDirect3D9Ex* Direct3D9 = NULL;
 	IDirect3DDevice9Ex* pDevice = NULL;
 	D3DPRESENT_PARAMETERS pParams = { NULL };
-	MARGINS Margin = { -1 };
+	MARGINS Margin = { 0, 0, Process::WindowLeft, Process::WindowBottom };
 	MSG Message = { NULL };
 }
 
