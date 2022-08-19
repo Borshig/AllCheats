@@ -41,7 +41,7 @@ union GM
 	u8Byte u8Bytes;
 	BYTE Bytes[8];
 	QWORD qWORD;
-} uGM;
+} uGM, savedGM;
 
 
 GameData data1;
@@ -90,32 +90,92 @@ void writeInformation()
 
 }
 
-void enableGodMod()
+void switchGodMod(bool bEnable)
 {
 
 	ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
 		&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
 	std::cout << "INSTRUCTION SET: ";
+
 	for (int i = 0; i < sizeof(DWORD) + 2 * sizeof(BYTE); i++)
 	{
 		std::cout << hex << (int)uGM.Bytes[i] << ":";
 	}
 	std::cout << std::endl;
 
+
+
 	
-	for (int i = 0; i < sizeof(DWORD) + 2 * sizeof(BYTE); i++)
+
+
+	if (bEnable)
+	{		
+
+		for (int i = 0; i < sizeof(DWORD) + 2 * sizeof(BYTE); i++)
+		{
+			uGM.Bytes[i] = 0x90;
+		}
+
+		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+			&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
+	}
+	else
 	{
-		uGM.Bytes[i] = 0x90;
+		
+		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+			 &savedGM, sizeof(QWORD), 0);
+	}
+	
+
+}
+
+void searchAllEnemies()
+{
+	std::cout << std::endl;
+	QWORD previos = 0;
+	for (QWORD qWordIter = 0; qWordIter <= 1024; qWordIter += 0x8)
+	{
+		QWORD StepIter = 0;
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0x0134EAB0), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + 0x78), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		if (!StepIter) continue;
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + qWordIter), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		if (!StepIter) continue;
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + 0x8), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		if (!StepIter) continue;
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + 0xC0), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		if (!StepIter) continue;
+		
+		QWORD qLastStep = StepIter;
+
+		if (qLastStep == previos) continue;
+			previos = qLastStep;
+
+		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + 0x12C), //(player * EntityLoopDistance)
+			&StepIter, sizeof(QWORD), 0);
+		if (!StepIter || (int)StepIter < 1) continue;
+		
+		
+		std::cout << "Found entity: " << std::hex << "0x" << (QWORD)qLastStep;
+		std::cout << " Health: " << std::dec << (int)StepIter << std::endl;
+
+		Sleep(2);
 	}
 
-	WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-		&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
+			
+		
 
 }
 
 
 int main()
 {
+	savedGM.qWORD = 0x00000000012cbb89;
 	/*
 	offsets.emplace_back(0x012E3230);
 	offsets.emplace_back(0x8);
@@ -129,6 +189,7 @@ int main()
 	offsets2.emplace_back(0xC0);
 	offsets2.emplace_back(0x12C);
 	*/
+
 
 	
 
@@ -173,12 +234,20 @@ int main()
 			std::cout
 				<< "Health 2nd: " << data2.Health << " "
 				<< std::endl;
+
+			searchAllEnemies();
+
 		}
 
 		if ((GetAsyncKeyState(VK_F2) & 1))
 		{
-			enableGodMod();
+			switchGodMod(true);
 		}
+		if ((GetAsyncKeyState(VK_F3) & 1))
+		{
+			switchGodMod(false); // mov [rbx+0000012C],edi  // __dwordEngine + 0xBAD156
+		}
+		
 
 
 
