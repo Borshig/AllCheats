@@ -35,6 +35,8 @@ struct u8Byte {
 	BYTE inst8;
 };
 
+void* allocactedMemGodMode = 0;
+bool bAllreadyAllocated = false;
 
 union GM
 {
@@ -42,6 +44,7 @@ union GM
 	BYTE Bytes[8];
 	QWORD qWORD;
 } uGM, savedGM;
+
 
 
 GameData data1;
@@ -92,7 +95,7 @@ void writeInformation()
 
 void switchGodMod(bool bEnable)
 {
-
+	/*
 	ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
 		&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
 	std::cout << "INSTRUCTION SET: ";
@@ -125,7 +128,53 @@ void switchGodMod(bool bEnable)
 		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
 			 &savedGM, sizeof(QWORD), 0);
 	}
+	*/
+
+	GM newdata[3];
+	newdata[0].qWORD = 0x83BB90010000010F;
+	newdata[1].qWORD = 0x840600000089BB2C;
+	newdata[2].qWORD = 0x010000E944D167FF;
 	
+
+
+	if (bEnable)
+	{
+		if (!bAllreadyAllocated)
+		{
+			allocactedMemGodMode = VirtualAllocEx(fProcess.__HandleProcess, 0, 128, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			if (allocactedMemGodMode)
+			{
+				WriteProcessMemory(fProcess.__HandleProcess,
+					allocactedMemGodMode,				// where
+					newdata,            //  for what
+					sizeof(newdata) // sizeof new code segment
+					, 0);
+				bAllreadyAllocated = true;
+
+				uGM.qWORD = 
+
+				WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+					&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
+
+
+			} // else loc == 0
+		}
+		else
+		{
+
+		}
+		
+	}
+	else
+	{
+
+		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+			&savedGM, sizeof(QWORD), 0);
+	}
+	
+	
+
+
 
 }
 
@@ -135,6 +184,7 @@ void searchAllEnemies()
 	QWORD previos = 0;
 	for (QWORD qWordIter = 0; qWordIter <= 1024; qWordIter += 0x8)
 	{
+		std::cout << std::dec;
 		QWORD StepIter = 0;
 		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0x0134EAB0), //(player * EntityLoopDistance)
 			&StepIter, sizeof(QWORD), 0);
@@ -154,17 +204,22 @@ void searchAllEnemies()
 		QWORD qLastStep = StepIter;
 
 		if (qLastStep == previos) continue;
-			previos = qLastStep;
+
+		previos = qLastStep;
+		QWORD HealthAdress = StepIter + 0x12C;
 
 		ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(StepIter + 0x12C), //(player * EntityLoopDistance)
 			&StepIter, sizeof(QWORD), 0);
 		if (!StepIter || (int)StepIter < 1) continue;
 		
-		
+		if ((int)StepIter == 728)
+		{
+			std::cout << "---" << qWordIter << "---";
+		}
 		std::cout << "Found entity: " << std::hex << "0x" << (QWORD)qLastStep;
-		std::cout << " Health: " << std::dec << (int)StepIter << std::endl;
-
-		Sleep(2);
+		std::cout << " Health: " << std::dec << (int)StepIter  << "(0x" << std::hex<< (QWORD)(HealthAdress) <<")" << std::endl;
+		
+		Sleep(1);
 	}
 
 			

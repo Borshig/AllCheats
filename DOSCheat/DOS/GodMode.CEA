@@ -1,0 +1,33 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,128,"EoCApp.exe"+BAD156)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+cmp [rbx+00000190], 1
+je exit
+
+originalcode:
+mov [rbx+0000012C],edi
+
+exit:
+jmp returnhere
+
+"EoCApp.exe"+BAD156:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+"EoCApp.exe"+BAD156:
+mov [rbx+0000012C],edi
+//Alt: db 89 BB 2C 01 00 00

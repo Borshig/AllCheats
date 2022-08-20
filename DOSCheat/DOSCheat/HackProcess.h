@@ -17,7 +17,7 @@ public:
 
 	PROCESSENTRY32 __gameProcess;
 	HANDLE __HandleProcess;
-	HWND __HWNDCss;
+	HWND __HWND;
 	QWORD __dwordClient;
 	QWORD __dwordEngine;
 
@@ -185,7 +185,7 @@ public:
 		//while (__dwordVGui == 0x0) __dwordVGui = GetModuleNamePointer((LPSTR)"vguimatsurface.dll", __gameProcess.th32ProcessID);
 		//while(__dwordLibCef == 0x0) __dwordLibCef = GetModuleNamePointer("libcef.dll", __gameProcess.th32ProcessID);
 	//	while(__dwordSteam == 0x0) __dwordSteam = GetModuleNamePointer("steam.dll", __gameProcess.th32ProcessID);
-		__HWNDCss = FindWindowA(NULL, "DOS");
+		__HWND = FindWindowA(NULL, "DOS");
 
 		return;
 	}
