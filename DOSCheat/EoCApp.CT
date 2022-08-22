@@ -2,14 +2,6 @@
 <CheatTable MugenJinFuuTableVersion="34">
   <CheatEntries>
     <CheatEntry>
-      <ID>0</ID>
-      <Description>"No description"</Description>
-      <LastState Value="2569971177" RealAddress="7FF69EB1D156"/>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"EoCApp.exe"0xBAD156</Address>
-    </CheatEntry>
-    <CheatEntry>
       <ID>9</ID>
       <Description>"Enemies"</Description>
       <LastState Value="" RealAddress="00000000"/>
@@ -18,7 +10,7 @@
         <CheatEntry>
           <ID>23</ID>
           <Description>"Enemy #1 ptr"</Description>
-          <LastState Value="0" RealAddress="25927747044"/>
+          <LastState Value="1110" RealAddress="16C4D9B0234"/>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0134EAB0</Address>
           <Offsets>
@@ -32,7 +24,7 @@
         <CheatEntry>
           <ID>22</ID>
           <Description>"Ememy #2 ptr"</Description>
-          <LastState Value="0" RealAddress="259205F4024"/>
+          <LastState Value="1110" RealAddress="16C4EF4C924"/>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0134EAB0</Address>
           <Offsets>
@@ -46,7 +38,7 @@
         <CheatEntry>
           <ID>21</ID>
           <Description>"Enemy #3 ptr"</Description>
-          <LastState Value="0" RealAddress="25984EBB1C4"/>
+          <LastState Value="1101" RealAddress="16C4F071414"/>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0134EAB0</Address>
           <Offsets>
@@ -60,7 +52,7 @@
         <CheatEntry>
           <ID>25</ID>
           <Description>"Аррока"</Description>
-          <LastState Value="728" RealAddress="25923F11ED4"/>
+          <LastState Value="316" RealAddress="16C3B283A64"/>
           <ShowAsSigned>0</ShowAsSigned>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0134EAB0</Address>
@@ -84,7 +76,7 @@
         <CheatEntry>
           <ID>6</ID>
           <Description>"Inari Health"</Description>
-          <LastState Value="704" RealAddress="2591F8156F4"/>
+          <LastState Value="431" RealAddress="16C614938B4"/>
           <ShowAsSigned>0</ShowAsSigned>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0x0134EAF0</Address>
@@ -98,7 +90,7 @@
         <CheatEntry>
           <ID>7</ID>
           <Description>"Borshig Health"</Description>
-          <LastState Value="394" RealAddress="259215E7734"/>
+          <LastState Value="304" RealAddress="16C508E4294"/>
           <ShowAsSigned>0</ShowAsSigned>
           <VariableType>4 Bytes</VariableType>
           <Address>"EoCApp.exe"+0x0134EAF0</Address>
@@ -112,12 +104,6 @@
       </CheatEntries>
     </CheatEntry>
     <CheatEntry>
-      <ID>10</ID>
-      <Description>"No Description"</Description>
-      <VariableType>4 Bytes</VariableType>
-      <Address>1643F91ACA4</Address>
-    </CheatEntry>
-    <CheatEntry>
       <ID>12</ID>
       <Description>"Second Scan"</Description>
       <LastState Value="" RealAddress="00000000"/>
@@ -128,56 +114,13 @@
           <Description>"Enemies"</Description>
           <LastState Value="" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
-          <CheatEntries>
-            <CheatEntry>
-              <ID>14</ID>
-              <Description>"Enemy #1 712"</Description>
-              <VariableType>4 Bytes</VariableType>
-              <Address>16445ED9FA4</Address>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>15</ID>
-              <Description>"Enemy #2 1080"</Description>
-              <VariableType>4 Bytes</VariableType>
-              <Address>1644823B7C4</Address>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>17</ID>
-              <Description>"Enemy #3 1100"</Description>
-              <VariableType>4 Bytes</VariableType>
-              <Address>16437F84994</Address>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>16</ID>
-              <Description>"Аррока"</Description>
-              <VariableType>4 Bytes</VariableType>
-              <Address>1644961A5C4</Address>
-            </CheatEntry>
-          </CheatEntries>
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>
     <CheatEntry>
-      <ID>24</ID>
-      <Description>"Аррока"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>0x1643a50ef18+12C</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>26</ID>
-      <Description>"No description"</Description>
-      <LastState Value="A5 2E 99 00 90 48 83 BE B0" RealAddress="7FF69EB1D157"/>
-      <ShowAsHex>1</ShowAsHex>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>Array of byte</VariableType>
-      <ByteLength>9</ByteLength>
-      <Address>"EoCApp.exe"+0xBAD156 + 1</Address>
-    </CheatEntry>
-    <CheatEntry>
       <ID>30</ID>
       <Description>"GodMode"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -213,10 +156,43 @@ mov [rbx+0000012C],edi
     </CheatEntry>
     <CheatEntry>
       <ID>32</ID>
-      <Description>"No description"</Description>
-      <LastState Value="500" RealAddress="2592870437C"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>2592870437C</Address>
+      <Description>"GodMode"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,128,"EoCApp.exe"+BAD156)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+cmp [rbx+00000190], 1
+je exit
+
+originalcode:
+mov [rbx+0000012C],0
+
+exit:
+jmp returnhere
+
+"EoCApp.exe"+BAD156:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+"EoCApp.exe"+BAD156:
+mov [rbx+0000012C],edi
+//Alt: db 89 BB 2C 01 00 00
+</AssemblerScript>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>

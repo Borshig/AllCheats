@@ -12,7 +12,7 @@ cmp [rbx+00000190], 1
 je exit
 
 originalcode:
-mov [rbx+0000012C],edi
+mov [rbx+0000012C],0
 
 exit:
 jmp returnhere

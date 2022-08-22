@@ -35,7 +35,7 @@ struct u8Byte {
 	BYTE inst8;
 };
 
-void* allocactedMemGodMode = 0;
+void* allocatedMemGodMode = nullptr;
 bool bAllreadyAllocated = false;
 
 union GM
@@ -43,7 +43,7 @@ union GM
 	u8Byte u8Bytes;
 	BYTE Bytes[8];
 	QWORD qWORD;
-} uGM, savedGM;
+}savedGM;
 
 
 
@@ -95,85 +95,77 @@ void writeInformation()
 
 void switchGodMod(bool bEnable)
 {
-	/*
-	ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-		&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
-	std::cout << "INSTRUCTION SET: ";
 
-	for (int i = 0; i < sizeof(DWORD) + 2 * sizeof(BYTE); i++)
-	{
-		std::cout << hex << (int)uGM.Bytes[i] << ":";
-	}
-	std::cout << std::endl;
-
-
-
-	
-
-
-	if (bEnable)
-	{		
-
-		for (int i = 0; i < sizeof(DWORD) + 2 * sizeof(BYTE); i++)
-		{
-			uGM.Bytes[i] = 0x90;
-		}
-
-		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-			&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
-	}
-	else
-	{
+	GM newdata[4]; //new instructions
+	newdata[0].qWORD = 0x0F0100000190BB83;
+	newdata[1].qWORD = 0x2C83C70000000A84;
+	newdata[2].qWORD = 0xE900000000000001; 
+	newdata[3].qWORD = 0x00000000FF68D140; //E9 40 D1 68 FF 00 00 00 00 00 00 jump back jmp "EoCApp.exe"+BAD15C
 		
-		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-			 &savedGM, sizeof(QWORD), 0);
-	}
-	*/
-
-	GM newdata[3];
-	newdata[0].qWORD = 0x83BB90010000010F;
-	newdata[1].qWORD = 0x840600000089BB2C;
-	newdata[2].qWORD = 0x010000E944D167FF;
-	
-
+	//				cheatEngine 
+	//original code 89 BB 2C 01 00 00        EoCApp.exe+BAD156  mov [rbx+0000012C],edi
+	//				48 83 BE B0 01 00 00 00  EoCApp.exe+BAD15C cmp qword ptr [rsi+000001B0],00
 
 	if (bEnable)
 	{
 		if (!bAllreadyAllocated)
-		{
-			allocactedMemGodMode = VirtualAllocEx(fProcess.__HandleProcess, 0, 128, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-			if (allocactedMemGodMode)
+		{		
+			uintptr_t pLoc = fProcess.__dwordEngine + 0xBAD156;
+			while (allocatedMemGodMode == nullptr)
 			{
-				WriteProcessMemory(fProcess.__HandleProcess,
-					allocactedMemGodMode,				// where
-					newdata,            //  for what
-					sizeof(newdata) // sizeof new code segment
-					, 0);
-				bAllreadyAllocated = true;
+				// https://guidedhacking.com/threads/c-memory-allocation-and-jumps.11571/#post-66075 //
+				allocatedMemGodMode = VirtualAllocEx(fProcess.__HandleProcess, (void*)(pLoc), 0x100, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+				
+				if (!allocatedMemGodMode)
+				{
+					pLoc += 0x500;
+					continue;
+				}
+				QWORD readedValue = 0;
+				ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(allocatedMemGodMode), //(B1CE75)
+					&readedValue, sizeof(QWORD), 0); //change me
+			}
 
-				uGM.qWORD = 
+			GM sourceAddressJmpoffset;
+			sourceAddressJmpoffset.qWORD = ((DWORD)((QWORD)(fProcess.__dwordEngine + 0xBAD15C) - (QWORD)(allocatedMemGodMode)))- 0x1C;
 
-				WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-					&uGM.qWORD, sizeof(DWORD) + 2 * sizeof(BYTE), 0);
+			newdata[3].qWORD = sourceAddressJmpoffset.qWORD;
 
+			WriteProcessMemory(fProcess.__HandleProcess,
+				(void*)(allocatedMemGodMode),//	allocatedMemGodMode,// where
+				newdata,							// for what
+				sizeof(newdata)						// sizeof new code segment
+				, 0);
+			bAllreadyAllocated = true;
 
-			} // else loc == 0
 		}
-		else
-		{
 
-		}
-		
-	}
-	else
-	{
+		GM destAddressJmpoffset;
+		destAddressJmpoffset.qWORD = (QWORD)(allocatedMemGodMode)-(QWORD)(fProcess.__dwordEngine + 0xBAD15B);
+
+
+		BYTE bBytes[6] = { 0xE9,destAddressJmpoffset.Bytes[0],destAddressJmpoffset.Bytes[1],destAddressJmpoffset.Bytes[2],destAddressJmpoffset.Bytes[3],0x90 };
 
 		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-			&savedGM, sizeof(QWORD), 0);
+			&bBytes, 6, 0); //change me
+	}
+	else if (bAllreadyAllocated)
+	{
+		BYTE bBytes[16] = { 0x89, 0xBB,0x2C,0x01,0x00,0x00,0x48,0x83,0xBE,0xB0,0x01,0x00,0x00,0x00,0x90,0x90 };
+		/*
+		uGM[0].qWORD = 0x83 48 00 00 01 2C BB 89 BE B0 01  00 00 00 90 90;
+		uGM[1].qWORD = 0x909000000001B0BE;
+		*/
+
+		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+			&bBytes, 14, 0); //change me
+		//VirtualFree(allocatedMemGodMode, 0x100, MEM_DECOMMIT | MEM_RELEASE);
 	}
 	
+	std::cout << std::hex << allocatedMemGodMode << std::endl;
 	
-
+	int done = 0;
+	done += 1;
 
 
 }
@@ -230,6 +222,7 @@ void searchAllEnemies()
 
 int main()
 {
+
 	savedGM.qWORD = 0x00000000012cbb89;
 	/*
 	offsets.emplace_back(0x012E3230);
@@ -293,13 +286,15 @@ int main()
 			searchAllEnemies();
 
 		}
-
+		
 		if ((GetAsyncKeyState(VK_F2) & 1))
 		{
+			std::cout << "God mode switched on"	<< std::endl;
 			switchGodMod(true);
 		}
 		if ((GetAsyncKeyState(VK_F3) & 1))
 		{
+			std::cout << "God mode switched off" << std::endl;
 			switchGodMod(false); // mov [rbx+0000012C],edi  // __dwordEngine + 0xBAD156
 		}
 		
@@ -325,7 +320,12 @@ int main()
 	}
 	Sleep(20);
 
-
+	if (allocatedMemGodMode)
+	{
+		switchGodMod(false);
+		return VirtualFreeEx(fProcess.__HandleProcess, allocatedMemGodMode, 0, MEM_RELEASE);
+	}
+	
 
 }
 
