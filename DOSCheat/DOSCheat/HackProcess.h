@@ -7,7 +7,18 @@
 
 #include <iostream>
 #include <TlHelp32.h>
+
+#include "include/optick.h"
+
 //THIS FILE SIMPLY DOES MOST OF THE BACKEND WORK FOR US, FROM FINDING THE PROCESS TO SETTING UP CORRECT MEMORY ACCESS
+
+
+void SleepTime(UINT32 time)
+{
+	OPTICK_FRAME("Sleep")
+	OPTICK_EVENT();	
+	Sleep(time);
+}
 
 using QWORD = unsigned long long;
 
@@ -31,6 +42,7 @@ public:
 
 	BOOL ListProcessModules(QWORD dwPID)
 	{
+		OPTICK_EVENT();
 		HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
 		MODULEENTRY32 me32;
 
@@ -76,9 +88,8 @@ public:
 	}
 
 	QWORD FindProcessName(const char* __ProcessName, PROCESSENTRY32* pEntry) //return th32ProcessID(PID)
-	{
-		
-
+	{		
+		OPTICK_EVENT();
 		PROCESSENTRY32 __ProcessEntry;
 		__ProcessEntry.dwSize = sizeof(PROCESSENTRY32);
 		HANDLE hSnapshot = INVALID_HANDLE_VALUE;
@@ -103,6 +114,7 @@ public:
 
 	QWORD getThreadByProcess(QWORD __DwordProcess)
 	{
+		OPTICK_EVENT();
 		THREADENTRY32 __ThreadEntry;
 		__ThreadEntry.dwSize = sizeof(THREADENTRY32);
 		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
@@ -124,6 +136,7 @@ public:
 
 	QWORD GetModuleNamePointer(const char* LPSTRModuleName, QWORD __DwordProcessId)
 	{
+		OPTICK_EVENT();
 		MODULEENTRY32 lpModuleEntry = { 0 };
 		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, __DwordProcessId);
 
@@ -148,6 +161,7 @@ public:
 
 	void runSetDebugPrivs()
 	{
+		OPTICK_EVENT();
 		HANDLE __HandleProcess = GetCurrentProcess(), __HandleToken;
 		TOKEN_PRIVILEGES priv;
 		LUID __LUID;
@@ -164,12 +178,13 @@ public:
 	void RunProcess()
 	{
 
-
-
+		SleepTime(12);
+		OPTICK_FRAME("HackProcess Main Thread");
+		SleepTime(12);
 		//commented lines are for non steam versions of the game
 		runSetDebugPrivs();
-		while (!FindProcessName("EoCApp.exe", &__gameProcess)) Sleep(12); //"hl2.exe"
-		while (!(getThreadByProcess(__gameProcess.th32ProcessID))) Sleep(12);
+		while (!FindProcessName("EoCApp.exe", &__gameProcess)) SleepTime(12); //"hl2.exe"
+		while (!(getThreadByProcess(__gameProcess.th32ProcessID))) SleepTime(12);
 		__HandleProcess = OpenProcess(PROCESS_ALL_ACCESS, false, __gameProcess.th32ProcessID);
 
 		switch (GetLastError())
@@ -185,7 +200,7 @@ public:
 		//while (__dwordVGui == 0x0) __dwordVGui = GetModuleNamePointer((LPSTR)"vguimatsurface.dll", __gameProcess.th32ProcessID);
 		//while(__dwordLibCef == 0x0) __dwordLibCef = GetModuleNamePointer("libcef.dll", __gameProcess.th32ProcessID);
 	//	while(__dwordSteam == 0x0) __dwordSteam = GetModuleNamePointer("steam.dll", __gameProcess.th32ProcessID);
-		__HWND = FindWindowA(NULL, "DOS");
+		__HWND = FindWindowA(nullptr, "DOS EE (2560x1440) - (DX11) - (x64) - (7 WT)");
 
 		return;
 	}
