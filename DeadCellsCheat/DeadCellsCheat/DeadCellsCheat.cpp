@@ -24,12 +24,15 @@
 #include <d3d11.h>
 #include <tchar.h>
 
+bool bExit = false;
 bool bUseVsync = true;
 bool bGodModToEnable = false;
 bool bGodModEnabled = false;
 int windowstate = 1;
 
-
+DWORD instructionPositionGodMode = 0;
+DWORD instructionPositionResetKills = 0;
+DWORD instructionPositionUnlimitedAmmo = 0;
 
 void ChangeClickability(bool canclick, HWND ownd)
 {
@@ -73,14 +76,28 @@ struct u8Byte {
 	BYTE inst7;
 	BYTE inst8;
 };
-union GM
+struct u4Byte {
+	BYTE inst1; // hex
+	BYTE inst2;
+	BYTE inst3;
+	BYTE inst4;
+};
+union GM8
 {
 	u8Byte u8Bytes;
 	BYTE Bytes[8];
+	QWORD qWORD;
+};
+
+union GM4
+{
+	u4Byte u4Bytes;
+	BYTE Bytes[4];
 	DWORD dWORD;
-}savedGM;
+};
 
 void* allocatedMemGodMode = nullptr;
+bool bGodModeEnabled = false;
 bool bAllreadyAllocated = false;
 static bool ShowMenu = true;
 static bool ShowDemoMenu = false;
@@ -153,6 +170,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void findActiveAddress()
 {
 	OPTICK_EVENT();
+
+	/*
 	ReadProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(healthOffsets[0] - 0x00000718), //(player * EntityLoopDistance)
 		&activeAddressGamedata, sizeof(DWORD), 0);
 	
@@ -161,103 +180,160 @@ void findActiveAddress()
 		ReadProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(activeAddressGamedata + healthOffsets[it]), //(player * EntityLoopDistance)
 			&activeAddressGamedata, sizeof(DWORD), 0);
 	}	
+	*/
 
 }
 
 void readInformation()
 {
 	OPTICK_EVENT();
+
+	/*
 	 ReadProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(activeAddressGamedata + healthOffsets[healthOffsets.size() - 1]), //(player * EntityLoopDistance)
 		&data1, sizeof(GameData), 0);
-
+	*/
 
 }
 
 void writeInformation()
 {
 	OPTICK_EVENT();
+	/*
 	WriteProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(activeAddressGamedata + healthOffsets[healthOffsets.size() - 1]), //(player * EntityLoopDistance)
 		&data1, sizeof(GameData), 0);
-		
+	*/	
 }
 
 void switchGodMod(bool bEnable)
 {
 	OPTICK_EVENT();
 
+
 	/*
-	GM newdata[4]; //new instructions
+	DWORD instructionPositionGodMode 
+	DWORD instructionPositionResetKills  
+	*/
+	//89 51 54
+	BYTE originalBytesOHR[3] = { 0x89, 0x51, 0x54 }; // for onHitReset
+	BYTE newBytesOHR[3] = { 0x90,0x90,0x90 };
+
+	
+	if (bEnable)
+	{
+		WriteProcessMemory(fProcess32.__HandleProcess,
+			(void*)(instructionPositionResetKills +1),//	allocatedMemGodMode,// where
+			newBytesOHR,							// for what
+			sizeof(newBytesOHR)						// sizeof new code segment
+			, 0);
+		
+	}
+	else
+	{
+		WriteProcessMemory(fProcess32.__HandleProcess,
+			(void*)(instructionPositionResetKills +1),//	allocatedMemGodMode,// where
+			originalBytesOHR,							// for what
+			sizeof(originalBytesOHR)						// sizeof new code segment
+			, 0);
+	}
+	
+
+	// https://guidedhacking.com/threads/c-memory-allocation-and-jumps.11571/#post-66075 //
+
+	
+	/*GM newdata[4]; //new instructions
 	newdata[0].qWORD = 0x0F0100000190BB83;
 	newdata[1].qWORD = 0x2C83C70000000A84;
 	newdata[2].qWORD = 0xE900000000000001; 
 	newdata[3].qWORD = 0x00000000FF68D140; //E9 40 D1 68 FF 00 00 00 00 00 00 jump back jmp "EoCApp.exe"+BAD15C
+	*/
+
+	DWORD sourceAddressJmpoffset = 0x0;
+	DWORD destAddressJmpoffset = 0x0;
+
+	//0:  83 7a 30 01             cmp    DWORD PTR[edx + 0x30], 0x1
+	//4 : c7 82 04 01 00 00 00    mov    DWORD PTR[edx + 0x104], 0x0
+
+	BYTE bytes[] = { 0x83,0x7A,0x30,0x01, 0x0F,0x85,0x90,0x90,0x90,0x90   ,0xC7,0x82,0x04,0x01,0x00,0x00,0x00, 0x00,0x00,0x00,   0xE9,0x90,0x90,0x90,0x90 };
 	
-
-
-	//				cheatEngine 
-	//original code 89 BB 2C 01 00 00        EoCApp.exe+BAD156  mov [rbx+0000012C],edi
-	//				48 83 BE B0 01 00 00 00  EoCApp.exe+BAD15C cmp qword ptr [rsi+000001B0],00
-
 	if (bEnable)
 	{
 		if (!bAllreadyAllocated)
 		{		
-			uintptr_t pLoc = fProcess.__dwordEngine + 0xBAD156;
+			uintptr_t pLoc = fProcess32.__dwordClient;
 			while (allocatedMemGodMode == nullptr)
 			{
-				// https://guidedhacking.com/threads/c-memory-allocation-and-jumps.11571/#post-66075 //
-				allocatedMemGodMode = VirtualAllocEx(fProcess.__HandleProcess, (void*)(pLoc), 0x100, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+				
+				allocatedMemGodMode = VirtualAllocEx(fProcess32.__HandleProcess, (void*)(pLoc), 0x100, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
 				
 				if (!allocatedMemGodMode)
 				{
-					pLoc += 0x500;
+					pLoc += 0x2000; //0x500;
 					continue;
 				}
-				QWORD readedValue = 0;
-				ReadProcessMemory(fProcess.__HandleProcess, (PBYTE*)(allocatedMemGodMode), //(B1CE75)
-					&readedValue, sizeof(QWORD), 0); //change me
+				DWORD readedValue = 0;
+				ReadProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(allocatedMemGodMode), //(B1CE75)
+					&readedValue, sizeof(DWORD), 0); //change me
 			}
 
-			GM sourceAddressJmpoffset;
-			sourceAddressJmpoffset.dWORD = ((DWORD)((QWORD)(fProcess.__dwordEngine + 0xBAD15C) - (QWORD)(allocatedMemGodMode)))- 0x1C;
+			// another address
+			
+			sourceAddressJmpoffset = ((DWORD)((DWORD)(instructionPositionGodMode)-(DWORD)(allocatedMemGodMode)));
+			GM4 backJumpBytes;
+			backJumpBytes.dWORD = sourceAddressJmpoffset - 0x4;
+			
+			for (int i = 0; i < 4; i++)
+			{
+				bytes[i + 6] = backJumpBytes.Bytes[i];
+			}
 
-			newdata[3].dWORD = sourceAddressJmpoffset.qWORD;
+			backJumpBytes.dWORD = sourceAddressJmpoffset - 0x13;
+			for (int i = 0; i < 4; i++)
+			{
+				bytes[i + 21] = backJumpBytes.Bytes[i];
+			}
 
-			WriteProcessMemory(fProcess.__HandleProcess,
+			WriteProcessMemory(fProcess32.__HandleProcess,
 				(void*)(allocatedMemGodMode),//	allocatedMemGodMode,// where
-				newdata,							// for what
-				sizeof(newdata)						// sizeof new code segment
+				bytes,							// for what
+				sizeof(bytes)						// sizeof new code segment
 				, 0);
 			bAllreadyAllocated = true;
 
 		}
+		GM4 newJumpBytes;
+		newJumpBytes.dWORD = destAddressJmpoffset = (DWORD)(allocatedMemGodMode)-(DWORD)(instructionPositionGodMode)-5;
+		
 
-		GM destAddressJmpoffset;
-		destAddressJmpoffset.qWORD = (QWORD)(allocatedMemGodMode)-(QWORD)(fProcess.__dwordEngine + 0xBAD15B);
+
+		BYTE bBytes[6] = { 0xE9,newJumpBytes.Bytes[0],newJumpBytes.Bytes[1],newJumpBytes.Bytes[2],newJumpBytes.Bytes[3],0x90 };
 
 
-		BYTE bBytes[6] = { 0xE9,destAddressJmpoffset.Bytes[0],destAddressJmpoffset.Bytes[1],destAddressJmpoffset.Bytes[2],destAddressJmpoffset.Bytes[3],0x90 };
-
-		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
+		//Write JMP Instruction Address
+		WriteProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(instructionPositionGodMode),
 			&bBytes, 6, 0); //change me
 	}
 	else if (bAllreadyAllocated)
 	{
-		BYTE bBytes[16] = { 0x89, 0xBB,0x2C,0x01,0x00,0x00,0x48,0x83,0xBE,0xB0,0x01,0x00,0x00,0x00,0x90,0x90 };
+		//89 82 04 01 00 00
+		BYTE bBytes[] = { 0x89, 0x82,0x04,0x01,0x00,0x00 };
 		
+		/*
 		uGM[0].qWORD = 0x83 48 00 00 01 2C BB 89 BE B0 01  00 00 00 90 90;
 		uGM[1].qWORD = 0x909000000001B0BE;
-		
+		*/
 
-		WriteProcessMemory(fProcess.__HandleProcess, (PBYTE*)(fProcess.__dwordEngine + 0xBAD156), //(B1CE75)
-			&bBytes, 14, 0); //change me
-		//VirtualFree(allocatedMemGodMode, 0x100, MEM_DECOMMIT | MEM_RELEASE);
+		WriteProcessMemory(fProcess32.__HandleProcess, (PBYTE*)(instructionPositionGodMode),
+			&bBytes, sizeof(bBytes), 0); //change me
+
+
+		VirtualFree(allocatedMemGodMode, 0x100, MEM_DECOMMIT | MEM_RELEASE);
 	}
 	
 	std::cout << std::hex << allocatedMemGodMode << std::endl;
 	
+
 	bGodModEnabled = bEnable;
-	*/
+	bGodModToEnable = bGodModEnabled;
 
 }
 
@@ -278,7 +354,7 @@ void takeInputLoop()
 		std::cout << "HOME key Pressed" << std::endl;
 	}
 
-	if ((GetAsyncKeyState(VK_F1) & 1))
+	if ((GetAsyncKeyState(VK_F3) & 1))
 	{
 		std::cout << std::hex
 			<< "Active gameAdress1: " << activeAddressGamedata << " " << &data1
@@ -293,12 +369,12 @@ void takeInputLoop()
 
 	}
 
-	if ((GetAsyncKeyState(VK_F2) & 1))
+	if ((GetAsyncKeyState(VK_F1) & 1))
 	{
 		std::cout << "God mode switched on" << std::endl;
 		switchGodMod(true);
 	}
-	if ((GetAsyncKeyState(VK_F3) & 1))
+	if ((GetAsyncKeyState(VK_F2) & 1))
 	{
 		std::cout << "God mode switched off" << std::endl;
 		switchGodMod(false); // mov [rbx+0000012C],edi  // __dwordEngine + 0xBAD156
@@ -340,7 +416,8 @@ void takeInputLoop()
 void checkAppAlive() // TODO: release
 {
 	OPTICK_EVENT();
-}   
+} 
+
 void cheatCycle()   // TODO: release
 {
 	OPTICK_EVENT();
@@ -857,14 +934,17 @@ UINT scanValues()
 	OPTICK_FRAME("ScanValues");
 		// 8B 42 2C 89 45 F8 03 - gold
 		// 8B 88 4C 03 00 00 89 4D F8 03 - cells
+		// 
 		// 89 51 1C 8B 45 08 8B 48 08 89 4D E0 - unlimited ammo
 		// FC 89 51 54 8B 45 08 - kills does not resets on hit -- 89 51 54 (AOB + 1) change on 3 nops 90 90 90
 
 		// F2 0F 11 50 78 8B 45 F0 - no skill cooldown
 		// 8B 91 98 02 00 00 89 55 * 8B 41 - unlimited jumps
 
+		// 89 82 04 01 00 00 8B 4D 0C GodMod
+		// 89 82 04 01 00 00 - disable GodMod
 
-	
+
 	std::vector<BYTE> arrayOfBytes;
 	
 	{
@@ -880,7 +960,10 @@ UINT scanValues()
 		arrayOfBytes.emplace_back(0x4D);
 		arrayOfBytes.emplace_back(0x0C);
 
-		DWORD instructionPositionGodMode = searchInMemory(arrayOfBytes,0x11FFFFFF); //AOBScan for
+		instructionPositionGodMode = searchInMemory(arrayOfBytes,0x11BFFFFF); //AOBScan for
+#ifdef DEBUG
+		std::cout << "instructionPositionGodMode: 0x" << std::hex << instructionPositionGodMode << std::dec << std::endl;
+#endif
 		arrayOfBytes.clear();
 	}
 	{
@@ -894,7 +977,10 @@ UINT scanValues()
 		arrayOfBytes.emplace_back(0x45);
 		arrayOfBytes.emplace_back(0x08);
 
-		DWORD instructionPositionResetKills = searchInMemory(arrayOfBytes, 0x125FFFFF); //AOBScan for
+		instructionPositionResetKills = searchInMemory(arrayOfBytes, 0x122FFFFF); //AOBScan for
+#ifdef DEBUG
+		std::cout << "instructionPositionResetKills: 0x" << std::hex << instructionPositionResetKills << std::dec << std::endl;
+#endif
 		arrayOfBytes.clear();
 	}
 
@@ -915,7 +1001,10 @@ UINT scanValues()
 		arrayOfBytes.emplace_back(0x4D);
 		arrayOfBytes.emplace_back(0xE0);
 
-		DWORD instructionPositionUnlimitedAmmo = searchInMemory(arrayOfBytes, 0x13CFFFFF); //AOBScan for
+		instructionPositionUnlimitedAmmo = searchInMemory(arrayOfBytes, 0x13CFFFFF); //AOBScan for
+#ifdef DEBUG
+		std::cout << "instructionPositionUnlimitedAmmo: 0x" << std::hex << instructionPositionUnlimitedAmmo << std::dec << std::endl;
+#endif
 		arrayOfBytes.clear();
 	}
 	OPTICK_EVENT("ScanValues#End");
@@ -928,13 +1017,21 @@ UINT scanValues()
 void mainLoop()
 {
 
-	OPTICK_FRAME("Main Loop#2");
-	
+	OPTICK_FRAME("Main Loop#2");	
 	MSG msg;
 	while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 	{
 		::TranslateMessage(&msg);
-		::DispatchMessage(&msg);		
+		::DispatchMessage(&msg);
+
+		switch (msg.message)
+		{
+		case  WM_QUIT:
+			//switchGodMod(false);
+				bExit = true;
+				return;
+			break;
+		}
 	}
 
 	checkAppAlive();
@@ -959,12 +1056,15 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case  WM_QUIT:
 
+
+		
+
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 		if (DirectX11Interface::pd3dDevice != nullptr)
 		{
-			CleanupDeviceD3D();			
+			CleanupDeviceD3D();	
 		}
 		
 		DestroyWindow(OverlayWindow::Hwnd);
@@ -989,6 +1089,7 @@ int main()
 	SleepTime(1000);
 	OPTICK_FRAME("Main Thread#1");
 	
+#ifdef OPTIC_PAUSE
 	int tick = 0;
 	while (tick < 4*5)
 	{
@@ -996,6 +1097,7 @@ int main()
 		tick++;
 		std::cout << tick << std::endl;
 	}
+#endif
 	
 	std::cout << "Started" << std::endl;
 	
@@ -1101,17 +1203,16 @@ int main()
 	scanValues();
 
 
-	while (!((GetAsyncKeyState(VK_F8) & 1))) 
+	while (!bExit && !(GetAsyncKeyState(VK_F8) & 1))
 	{
 		mainLoop();
 	}
 	
 	SleepTime(10);
 
-	if (allocatedMemGodMode)
+	if (bGodModEnabled)
 	{
-		switchGodMod(false);
-		return VirtualFreeEx(fProcess32.__HandleProcess, allocatedMemGodMode, 0, MEM_RELEASE);
+		switchGodMod(false);		
 	}
 
 	CleanupDeviceD3D();
